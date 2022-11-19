@@ -1,9 +1,9 @@
 # Bannerlord Dedicated Server Patches
-This is a mod for server side patching of known crashes for the Bannerlord Dedicated Server. It works by overwriting existing .NET methods with harmony patches and either working around or directly addressing known issues. The majority of .NET errors are null references, so null checking is the majority of the patches. I will do my best to keep this mod up to date with the latest server files, especially if TW implements some of these patches themselves.
+This is a mod for server side patching of known crashes for Bannerlord Dedicated Servers. It works by overwriting existing .NET methods with harmony patches and either working around or directly addressing known issues. The majority of .NET errors are null references, so null checking is the majority of the patches. I will do my best to keep this mod up to date with the latest server files, especially if TW implements some of these patches themselves.
 
 ## Installation
 
-- Download the latest release (It's located on right panel)
+- Download the latest release (It's located on the right panel)
 - Add the following xml node to your `[Dedicated Server Files]/Modules/Multiplayer/SubModule.xml` file, between the  `<SubModules> </SubModules>` tags. 
 ```xml
 <SubModule>
