@@ -58,6 +58,8 @@ If your server has .NET crashes that aren't addressed by this server side module
 2. Enter "%localappdata%\CrashDumps" into the search bar
 3. Grab the latest dmp for "DedicatedCustomerServer.Starter.exe"
 
+Note: Enabling full crash dumps is very beneficial for figuring out the best solution for each crash! To enable full crash dumps, follow these instructions: https://helgeklein.com/blog/creating-an-application-crash-dump/
+
 ## Limitations
 Some errors occur within the game engine which is written in C++. Unfortunately, these errors cannot be addressed by modding and must be addressed by TaleWorlds directly. If you do see these errors, posting the information on the TW support forums would be your best solution.
 
