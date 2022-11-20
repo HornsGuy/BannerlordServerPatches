@@ -27,14 +27,14 @@ namespace ServerPatches.Patches
     }
 
 
-    public class PatchMissionCustomGameServerComponent
+    public class PatchMissionCustomGameServerComponent_OnPlayerKills
     {
         static bool hitOnce = false;
         public static bool Prefix(MissionCustomGameServerComponent __instance, MissionPeer killerPeer, Agent killedAgent, MissionPeer assistorPeer)
         {
             if (!hitOnce)
             {
-                Logging.Instance.Info("PatchMissionCustomGameServerComponent.Prefix has been hit once");
+                Logging.Instance.Info("PatchMissionCustomGameServerComponent_OnPlayerKills.Prefix has been hit once");
                 hitOnce = true;
             }
 
@@ -88,9 +88,44 @@ namespace ServerPatches.Patches
                     //if (((controlledAgent != null) ? controlledAgent.CurrentlyUsedGameObject : null) != null)
                     if (controlledAgent != null && controlledAgent.CurrentlyUsedGameObject != null)
                     {
-                        BattlePlayerStatsSiege battlePlayerStatsSiege = currentBattleResult.PlayerEntries[killerPeer.Peer.Id].PlayerStats as BattlePlayerStatsSiege;
-                        int siegeEngineKills = battlePlayerStatsSiege.SiegeEngineKills;
-                        battlePlayerStatsSiege.SiegeEngineKills = siegeEngineKills + 1;
+                        if(currentBattleResult.PlayerEntries != null )
+                        {
+                            if(killerPeer.Peer != null && killerPeer.Peer.Id != null)
+                            {
+                                if(currentBattleResult.PlayerEntries[killerPeer.Peer.Id] != null)
+                                {
+                                    BattlePlayerStatsSiege battlePlayerStatsSiege = currentBattleResult.PlayerEntries[killerPeer.Peer.Id].PlayerStats as BattlePlayerStatsSiege;
+                                    if (battlePlayerStatsSiege != null)
+                                    {
+                                        int siegeEngineKills = battlePlayerStatsSiege.SiegeEngineKills;
+                                        battlePlayerStatsSiege.SiegeEngineKills = siegeEngineKills + 1;
+                                    }
+                                    else
+                                    {
+                                        Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnPlayerKills: battlePlayerStatsSiege was null!");
+                                    }
+                                }
+                                else
+                                {
+                                    Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnPlayerKills: currentBattleResult.PlayerEntries[killerPeer.Peer.Id] was null!");
+                                }
+                            }
+                            else
+                            {
+                                Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnPlayerKills: killerPeer.Peer/killerPeer.Peer.Id was null!");
+                            }
+                        }
+                        else
+                        {
+                            Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnPlayerKills: currentBattleResult.PlayerEntries was null!");
+                        }
+                    }
+                    else
+                    {
+                        if(controlledAgent == null)
+                        {
+                            Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnPlayerKills: killerPeer.ControlledAgent was null!");
+                        }
                     }
                 }
                 //this._gameLogger.GameLogs.Add(gameLog);
@@ -106,9 +141,77 @@ namespace ServerPatches.Patches
 
             _customBattleServer.UpdateBattleStats(currentBattleResult, _teamScores, _playerScores);
 
+            return false;
+        }
+    }
 
+    public class PatchMissionCustomGameServerComponent_OnObjectiveGoldGained
+    {
+        static bool hitOnce = false;
+        public static bool Prefix(MissionCustomGameServerComponent __instance, MissionPeer peer, int goldGain)
+        {
+            if (!hitOnce)
+            {
+                Logging.Instance.Info("PatchMissionCustomGameServerComponent_OnObjectiveGoldGained.Prefix has been hit once");
+                hitOnce = true;
+            }
 
+            // if (this._warmupEnded)
+            bool _warmupEnded = (bool)Traverse.Create(__instance).Field("_warmupEnded").GetValue();
+            if (_warmupEnded)
+            {
+                if(peer != null)
+                {
+                    if(peer.Peer != null)
+                    {
+                        if(peer.Peer.Id != null)
+                        {
+                            //(this._battleResult.GetCurrentBattleResult().PlayerEntries[peer.Peer.Id].PlayerStats as BattlePlayerStatsSiege).ObjectiveGoldGained += goldGain;
+                            MultipleBattleResult _battleResult = Traverse.Create(__instance).Field("_battleResult").GetValue() as MultipleBattleResult;
+                            BattleResult currentBattleResult = _battleResult.GetCurrentBattleResult();
+                            if(currentBattleResult != null)
+                            {
+                                BattlePlayerStatsSiege battlePlayerStatsSiege = currentBattleResult.PlayerEntries[peer.Peer.Id].PlayerStats as BattlePlayerStatsSiege;
+                                if(battlePlayerStatsSiege != null)
+                                {
+                                    battlePlayerStatsSiege.ObjectiveGoldGained += goldGain;
 
+                                    //this._customBattleServer.UpdateBattleStats(this._battleResult.GetCurrentBattleResult(), this._teamScores, this._playerScores);
+                                    CustomBattleServer _customBattleServer = Traverse.Create(__instance).Field("_customBattleServer").GetValue() as CustomBattleServer;
+                                    Dictionary<int, int> _teamScores = Traverse.Create(__instance).Field("_teamScores").GetValue() as Dictionary<int, int>;
+                                    Dictionary<PlayerId, int> _playerScores = Traverse.Create(__instance).Field("_playerScores").GetValue() as Dictionary<PlayerId, int>;
+                                    currentBattleResult = _battleResult.GetCurrentBattleResult();
+
+                                    _customBattleServer.UpdateBattleStats(currentBattleResult, _teamScores, _playerScores);
+                                }
+                                else
+                                {
+                                    Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnObjectiveGoldGained: battlePlayerStatsSiege was null!");
+                                }
+
+                            }
+                            else
+                            {
+                                Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnObjectiveGoldGained: currentBattleResult was null!");
+                            }
+                            
+                        }
+                        else
+                        {
+                            Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnObjectiveGoldGained: peer.Peer.Id was null!");
+                        }
+                    }
+                    else
+                    {
+                        Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnObjectiveGoldGained: peer.Peer was null!");
+                    }
+                    
+                }
+                else
+                {
+                    Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnObjectiveGoldGained: peer was null!");
+                }
+            }
 
             return false;
         }
