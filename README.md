@@ -3,7 +3,7 @@ This is a mod for server side patching of known crashes for Bannerlord Dedicated
 
 ## Installation
 
-- Put the **[latest release dlls](https://github.com/HornsGuy/BannerlordServerPatches/releases/download/v1.0.1/ServerPatches_v1.0.1.zip)** in "Mount & Blade II Dedicated Server\bin\Win64_Shipping_Server"
+- Put the **[latest release dlls](https://github.com/HornsGuy/BannerlordServerPatches/releases/download/v1.0.1.1/ServerPatches_v1.0.1.1.zip)** in "Mount & Blade II Dedicated Server\bin\Win64_Shipping_Server"
 - Add the following xml node to your `[Dedicated Server Files]/Modules/Multiplayer/SubModule.xml` file, between the  `<SubModules> </SubModules>` tags. 
 ```xml
 <SubModule>
