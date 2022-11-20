@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using TaleWorlds.MountAndBlade;
 
 namespace ServerPatches
 {
@@ -15,6 +16,11 @@ namespace ServerPatches
             var functionToPatch = classToPatch.GetMethod(functionToPatchName, flags);
             var newHarmonyPatch = patchClass.GetMethod(functionPatchName);
             harmony.Patch(functionToPatch, prefix: new HarmonyMethod(newHarmonyPatch));
+        }
+
+        public static void CallMethod(object obj, string method, object[] arguments)
+        {
+            Traverse.Create(obj).Method(method, arguments);
         }
     }
 }
