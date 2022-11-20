@@ -26,9 +26,12 @@ namespace ServerPatches
 
             Harmony harmony = new Harmony("ServerPatches");
 
+            harmony.PatchAll();
+
             HarmonyHelper.AddPrefix(harmony, typeof(MissionLobbyComponent), "SendPeerInformationsToPeer", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionLobbyComponent_SendPeerInformationsToPeer), "Prefix");
             HarmonyHelper.AddPrefix(harmony, typeof(MissionNetworkComponent), "SendSpawnedMissionObjectsToPeer", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionNetworkComponent), "Prefix");
             HarmonyHelper.AddPrefix(harmony, typeof(MissionCustomGameServerComponent), "OnPlayerKills", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionCustomGameServerComponent), "Prefix");
+            
         }
 
     }

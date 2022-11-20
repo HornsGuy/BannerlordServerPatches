@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.Core;
@@ -12,6 +14,19 @@ using TaleWorlds.PlayerServices;
 
 namespace ServerPatches.Patches
 {
+
+    [HarmonyPatch(typeof(MissionLobbyComponent), "OnPlayerKills")]
+    class MissionLobbyComponent_OnPlayerKills
+    {
+        [HarmonyReversePatch]
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void OnPlayerKills(MissionLobbyComponent instance, MissionPeer killerPeer, Agent killedAgent, MissionPeer assistorPeer)
+        {
+
+        }
+    }
+
+
     public class PatchMissionCustomGameServerComponent
     {
         static bool hitOnce = false;
@@ -23,12 +38,9 @@ namespace ServerPatches.Patches
                 hitOnce = true;
             }
 
-            // Call parent
             //base.OnPlayerKills(killerPeer, killedAgent, assistorPeer);
-            MissionLobbyComponent mlcInstance = (MissionLobbyComponent)__instance;
-            HarmonyHelper.CallMethod(mlcInstance, "OnPlayerKills", new object[] { killerPeer, killedAgent, assistorPeer });
+            MissionLobbyComponent_OnPlayerKills.OnPlayerKills(__instance, killerPeer, killedAgent, assistorPeer);
 
-            
             PlayerId id = killerPeer.Peer.Id;
             //BattleResult currentBattleResult = this._battleResult.GetCurrentBattleResult();
             MultipleBattleResult _battleResult = Traverse.Create(__instance).Field("_battleResult").GetValue() as MultipleBattleResult;
