@@ -1,9 +1,9 @@
 # Bannerlord Dedicated Server Patches
-This is a mod for server side patching of known crashes for the Bannerlord Dedicated Server. It works by overwriting existing .NET methods with harmony patches and either working around or directly addressing known issues. The majority of .NET errors are null references, so null checking is the majority of the patches. I will do my best to keep this mod up to date with the latest server files, especially if TW implements some of these patches themselves.
+This is a mod for server side patching of known crashes for Bannerlord Dedicated Servers. It works by overwriting existing .NET methods with harmony patches and either working around or directly addressing known issues. The majority of .NET errors are null references, so null checking is the majority of the patches. I will do my best to keep this mod up to date with the latest server files, especially if TW implements some of these patches themselves.
 
 ## Installation
 
-- Download the latest release (It's located on right panel)
+- Put the **[latest release dlls](https://github.com/HornsGuy/BannerlordServerPatches/releases/download/v1.0.1.1/ServerPatches_v1.0.1.1.zip)** in "Mount & Blade II Dedicated Server\bin\Win64_Shipping_Server"
 - Add the following xml node to your `[Dedicated Server Files]/Modules/Multiplayer/SubModule.xml` file, between the  `<SubModules> </SubModules>` tags. 
 ```xml
 <SubModule>
@@ -57,6 +57,8 @@ If your server has .NET crashes that aren't addressed by this server side module
 1. Open File Explorer
 2. Enter "%localappdata%\CrashDumps" into the search bar
 3. Grab the latest dmp for "DedicatedCustomerServer.Starter.exe"
+
+Note: Enabling full crash dumps is very beneficial for figuring out the best solution for each crash! To enable full crash dumps, follow these instructions: https://helgeklein.com/blog/creating-an-application-crash-dump/
 
 ## Limitations
 Some errors occur within the game engine which is written in C++. Unfortunately, these errors cannot be addressed by modding and must be addressed by TaleWorlds directly. If you do see these errors, posting the information on the TW support forums would be your best solution.
