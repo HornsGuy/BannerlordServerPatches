@@ -3,7 +3,7 @@ This is a mod for server side patching of known crashes for Bannerlord Dedicated
 
 ## Installation
 
-- Put the **[latest release dlls](https://github.com/HornsGuy/BannerlordServerPatches/releases/download/v1.0.1.1/ServerPatches_v1.0.1.1.zip)** in "Mount & Blade II Dedicated Server\bin\Win64_Shipping_Server"
+- Put the **[latest release dlls](https://github.com/HornsGuy/BannerlordServerPatches/releases/download/v1.0.1.2/ServerPatches_v1.0.1.2.zip)** in "Mount & Blade II Dedicated Server\bin\Win64_Shipping_Server"
 - Add the following xml node to your `[Dedicated Server Files]/Modules/Multiplayer/SubModule.xml` file, between the  `<SubModules> </SubModules>` tags. 
 ```xml
 <SubModule>
@@ -42,6 +42,27 @@ This is a mod for server side patching of known crashes for Bannerlord Dedicated
 	</SubModules>
 </Module>
 ```
+## Settings
+You can modify how the ServerPatches dll behaves by changing the values in "ServerPatches/settings.json". The "ServerPatches" folder should be located in the same directory as the server exe
+
+### Options
+- LoggingAddGameLogsMessages - Enables/Disables the logging of "AddGameLogsMessage" REST messages. If turned on, the contents will appear in "ServerPatches/Rest/*.txt"
+- NumberOfLogsToKeep - The number of logs to preserve before deleting the oldest log file
+- NumberOfRestLogsToKeep - The number of rest logs to preserve before deleting the oldest log file
+- SettingsVersion - Used for versioning of the settings file. Do not modify.
+
+## ChangeLog
+
+### v1.0.1.2
+- Added Settings
+- Fixed an issue related to Rest Message "AddGameLogsMessage" causing communications with the master server to break down, though there is still more work to do
+
+<details>
+  <summary>v1.0.1.1</summary>
+  
+- Fixed 2 Issues the Calradic Campaign server was having with Siege
+  
+</details>
 
 ## Contributing
 
