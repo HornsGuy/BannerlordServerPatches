@@ -95,7 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HarmonyHelper.cs" />
-    <Compile Include="Patches\PatchMissionCustomGameServerComponent.cs" />
     <Compile Include="Patches\PatchMissionLobbyComponent.cs" />
     <Compile Include="Patches\PatchMissionNetworkComponent.cs" />
     <Compile Include="ServerPatches.cs" />
