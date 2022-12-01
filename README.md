@@ -53,9 +53,15 @@ You can modify how the ServerPatches dll behaves by changing the values in "Serv
 
 ## ChangeLog
 
-### v1.0.1.2
+### v1.0.2.0
+- Two known crashes have been fixed by TW, so their corresponding patches have been removed. Thanks TW Development Team!
+
+<details>
+  <summary>v1.0.1.2</summary>
+	
 - Added Settings
 - Fixed an issue related to Rest Message "AddGameLogsMessage" causing communications with the master server to break down, though there is still more work to do
+</details>
 
 <details>
   <summary>v1.0.1.1</summary>
