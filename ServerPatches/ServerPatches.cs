@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using TaleWorlds.MountAndBlade;
 using ServerPatches.Patches;
 using TaleWorlds.MountAndBlade.DedicatedCustomServer;
+using TaleWorlds.Diamond.Rest;
+using ServerPatches.LoggingPatches;
+using TaleWorlds.MountAndBlade.Diamond;
+using TaleWorlds.Diamond;
 
 namespace ServerPatches
 {
@@ -20,13 +24,21 @@ namespace ServerPatches
             Setup();
         }
 
+        private void LoadSettings()
+        {
+            Settings.LoadSettings("ServerPatches\\settings.json");
+        }
+
         private void Setup()
         {
-            Logging.Instance.StartLogging("ServerPatches", Logging.LogLevel.Info);
+            LoadSettings();
+
+            Logging.Instance.StartLogging("ServerPatches\\Logs", LoggingInstance.LogLevel.Info, Settings.GetNumberOfLogsToKeep());
+            Logging.Rest.StartLogging("ServerPatches\\RestLogs", LoggingInstance.LogLevel.Info,Settings.GetNumberOfRestLogsToKeep());
 
             Harmony harmony = new Harmony("ServerPatches");
 
-            harmony.PatchAll();
+            harmony.PatchAll();       
 
             HarmonyHelper.AddPrefix(harmony, typeof(MissionLobbyComponent), "SendPeerInformationsToPeer", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionLobbyComponent_SendPeerInformationsToPeer), "Prefix");
             HarmonyHelper.AddPrefix(harmony, typeof(MissionNetworkComponent), "SendSpawnedMissionObjectsToPeer", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionNetworkComponent), "Prefix");
