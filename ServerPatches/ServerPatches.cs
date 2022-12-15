@@ -13,6 +13,7 @@ using TaleWorlds.Diamond.Rest;
 using ServerPatches.LoggingPatches;
 using TaleWorlds.MountAndBlade.Diamond;
 using TaleWorlds.Diamond;
+using TaleWorlds.Engine;
 
 namespace ServerPatches
 {
@@ -42,6 +43,9 @@ namespace ServerPatches
 
             HarmonyHelper.AddPrefix(harmony, typeof(MissionLobbyComponent), "SendPeerInformationsToPeer", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionLobbyComponent_SendPeerInformationsToPeer), "Prefix");
             HarmonyHelper.AddPrefix(harmony, typeof(MissionNetworkComponent), "SendSpawnedMissionObjectsToPeer", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionNetworkComponent), "Prefix");
+            HarmonyHelper.AddPrefix(harmony, typeof(MissionCustomGameServerComponent), "OnPlayerKills", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionCustomGameServerComponent_OnPlayerKills), "Prefix");
+            HarmonyHelper.AddPrefix(harmony, typeof(MissionCustomGameServerComponent), "OnObjectiveGoldGained", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionCustomGameServerComponent_OnObjectiveGoldGained), "Prefix");
+            HarmonyHelper.AddPrefix(harmony, typeof(ScriptComponentBehavior), "SetScriptComponentToTickAux", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchScriptComponentBehavior), "Prefix");
         }
 
     }
