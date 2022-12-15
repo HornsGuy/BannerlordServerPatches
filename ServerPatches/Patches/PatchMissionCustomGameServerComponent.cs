@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TaleWorlds.Core;
+using TaleWorlds.Engine;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.DedicatedCustomServer;
 using TaleWorlds.MountAndBlade.Diamond;
@@ -210,6 +211,40 @@ namespace ServerPatches.Patches
                 else
                 {
                     Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnObjectiveGoldGained: peer was null!");
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public class PatchMissionCustomGameServerComponent_OnDestructableComponentDestroyed
+    {
+        public static bool Prefix(MissionCustomGameServerComponent __instance, DestructableComponent destructableComponent, ScriptComponentBehavior attackerScriptComponentBehaviour, MissionPeer[] contributors)
+        {
+            bool _warmupEnded = (bool)Traverse.Create(__instance).Field("_warmupEnded").GetValue();
+            if (_warmupEnded)
+            {
+
+                foreach (MissionPeer missionPeer in contributors)
+                {
+                    BattlePlayerEntry battlePlayerEntry;
+                    MultipleBattleResult _battleResult = Traverse.Create(__instance).Field("_battleResult").GetValue() as MultipleBattleResult;
+                    MethodInfo dynMethod = typeof(MultipleBattleResult).GetMethod("CheckForComponent", BindingFlags.NonPublic | BindingFlags.Instance);
+                    bool checkForComponent = (bool)dynMethod.Invoke(_battleResult, new object[] { destructableComponent, typeof(SiegeWeapon) });
+                    if (_battleResult.GetCurrentBattleResult().TryGetPlayerEntry(missionPeer.Peer.Id, out battlePlayerEntry) && checkForComponent)
+                    {
+                        BattlePlayerStatsSiege battlePlayerStatsSiege = battlePlayerEntry.PlayerStats as BattlePlayerStatsSiege;
+                        int siegeEnginesDestroyed = battlePlayerStatsSiege.SiegeEnginesDestroyed;
+                        battlePlayerStatsSiege.SiegeEnginesDestroyed = siegeEnginesDestroyed + 1;
+                    }
+
+                    CustomBattleServer _customBattleServer = Traverse.Create(__instance).Field("_customBattleServer").GetValue() as CustomBattleServer;
+                    Dictionary<int, int> _teamScores = Traverse.Create(__instance).Field("_teamScores").GetValue() as Dictionary<int, int>;
+                    Dictionary<PlayerId, int> _playerScores = Traverse.Create(__instance).Field("_playerScores").GetValue() as Dictionary<PlayerId, int>;
+                    BattleResult currentBattleResult = _battleResult.GetCurrentBattleResult();
+
+                    _customBattleServer.UpdateBattleStats(currentBattleResult, _teamScores, _playerScores);
                 }
             }
 

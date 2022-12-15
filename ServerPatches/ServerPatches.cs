@@ -45,6 +45,7 @@ namespace ServerPatches
             HarmonyHelper.AddPrefix(harmony, typeof(MissionNetworkComponent), "SendSpawnedMissionObjectsToPeer", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionNetworkComponent), "Prefix");
             HarmonyHelper.AddPrefix(harmony, typeof(MissionCustomGameServerComponent), "OnPlayerKills", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionCustomGameServerComponent_OnPlayerKills), "Prefix");
             HarmonyHelper.AddPrefix(harmony, typeof(MissionCustomGameServerComponent), "OnObjectiveGoldGained", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionCustomGameServerComponent_OnObjectiveGoldGained), "Prefix");
+            HarmonyHelper.AddPrefix(harmony, typeof(MissionCustomGameServerComponent), "OnDestructableComponentDestroyed", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchMissionCustomGameServerComponent_OnDestructableComponentDestroyed), "Prefix");
             HarmonyHelper.AddPrefix(harmony, typeof(ScriptComponentBehavior), "SetScriptComponentToTickAux", BindingFlags.NonPublic | BindingFlags.Instance, typeof(PatchScriptComponentBehavior), "Prefix");
         }
 
