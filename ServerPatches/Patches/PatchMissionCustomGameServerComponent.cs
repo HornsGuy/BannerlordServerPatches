@@ -220,8 +220,15 @@ namespace ServerPatches.Patches
 
     public class PatchMissionCustomGameServerComponent_OnDestructableComponentDestroyed
     {
+        static bool hitOnce = false;
         public static bool Prefix(MissionCustomGameServerComponent __instance, DestructableComponent destructableComponent, ScriptComponentBehavior attackerScriptComponentBehaviour, MissionPeer[] contributors)
         {
+            if (!hitOnce)
+            {
+                Logging.Instance.Info("PatchMissionCustomGameServerComponent_OnDestructableComponentDestroyed.Prefix has been hit once");
+                hitOnce = true;
+            }
+
             bool _warmupEnded = (bool)Traverse.Create(__instance).Field("_warmupEnded").GetValue();
             if (_warmupEnded)
             {
@@ -232,12 +239,43 @@ namespace ServerPatches.Patches
                     MultipleBattleResult _battleResult = Traverse.Create(__instance).Field("_battleResult").GetValue() as MultipleBattleResult;
                     MethodInfo dynMethod = typeof(MultipleBattleResult).GetMethod("CheckForComponent", BindingFlags.NonPublic | BindingFlags.Instance);
                     bool checkForComponent = (bool)dynMethod.Invoke(_battleResult, new object[] { destructableComponent, typeof(SiegeWeapon) });
-                    if (_battleResult.GetCurrentBattleResult().TryGetPlayerEntry(missionPeer.Peer.Id, out battlePlayerEntry) && checkForComponent)
+                    if(missionPeer != null)
                     {
-                        BattlePlayerStatsSiege battlePlayerStatsSiege = battlePlayerEntry.PlayerStats as BattlePlayerStatsSiege;
-                        int siegeEnginesDestroyed = battlePlayerStatsSiege.SiegeEnginesDestroyed;
-                        battlePlayerStatsSiege.SiegeEnginesDestroyed = siegeEnginesDestroyed + 1;
+                        if(missionPeer.Peer != null)
+                        {
+                            if (missionPeer.Peer.Id != null)
+                            {
+                                if (_battleResult.GetCurrentBattleResult().TryGetPlayerEntry(missionPeer.Peer.Id, out battlePlayerEntry) && checkForComponent)
+                                {
+
+                                    BattlePlayerStatsSiege battlePlayerStatsSiege = battlePlayerEntry.PlayerStats as BattlePlayerStatsSiege;
+                                    if (battlePlayerStatsSiege != null)
+                                    {
+                                        int siegeEnginesDestroyed = battlePlayerStatsSiege.SiegeEnginesDestroyed;
+                                        battlePlayerStatsSiege.SiegeEnginesDestroyed = siegeEnginesDestroyed + 1;
+                                    }
+                                    else
+                                    {
+                                        Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnDestructableComponentDestroyed: battlePlayerStatsSiege was null");
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnDestructableComponentDestroyed: missionPeer.Peer.Id was null");
+                            }
+                        }
+                        else
+                        {
+                            Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnDestructableComponentDestroyed: missionPeer.Peer was null");
+                        }
                     }
+                    else
+                    {
+                        Logging.Instance.Error("PatchMissionCustomGameServerComponent_OnDestructableComponentDestroyed: missionPeer in contributors was null");
+                    }
+
 
                     CustomBattleServer _customBattleServer = Traverse.Create(__instance).Field("_customBattleServer").GetValue() as CustomBattleServer;
                     Dictionary<int, int> _teamScores = Traverse.Create(__instance).Field("_teamScores").GetValue() as Dictionary<int, int>;
