@@ -235,16 +235,17 @@ namespace ServerPatches.Patches
 
                 foreach (MissionPeer missionPeer in contributors)
                 {
-                    BattlePlayerEntry battlePlayerEntry;
+                    
                     MultipleBattleResult _battleResult = Traverse.Create(__instance).Field("_battleResult").GetValue() as MultipleBattleResult;
-                    MethodInfo dynMethod = typeof(MultipleBattleResult).GetMethod("CheckForComponent", BindingFlags.NonPublic | BindingFlags.Instance);
-                    bool checkForComponent = (bool)dynMethod.Invoke(_battleResult, new object[] { destructableComponent, typeof(SiegeWeapon) });
+                    MethodInfo dynMethod = typeof(MissionCustomGameServerComponent).GetMethod("CheckForComponent", BindingFlags.NonPublic | BindingFlags.Instance);
+                    bool checkForComponent = (bool)dynMethod.Invoke(__instance, new object[] { destructableComponent, typeof(SiegeWeapon) });
                     if(missionPeer != null)
                     {
                         if(missionPeer.Peer != null)
                         {
                             if (missionPeer.Peer.Id != null)
                             {
+                                BattlePlayerEntry battlePlayerEntry;
                                 if (_battleResult.GetCurrentBattleResult().TryGetPlayerEntry(missionPeer.Peer.Id, out battlePlayerEntry) && checkForComponent)
                                 {
 
