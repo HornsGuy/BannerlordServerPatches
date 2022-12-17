@@ -104,7 +104,6 @@
     <Compile Include="Patches\PatchMissionCustomGameServerComponent.cs" />
     <Compile Include="Patches\PatchMissionLobbyComponent.cs" />
     <Compile Include="Patches\PatchMissionNetworkComponent.cs" />
-    <Compile Include="Patches\PatchScriptComponentBehavior.cs" />
     <Compile Include="RestLogging.cs" />
     <Compile Include="ServerPatches.cs" />
     <Compile Include="Logging.cs" />
